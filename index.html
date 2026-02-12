@@ -133,23 +133,25 @@
             transform: translateY(0); 
         }
 
-        /* CAKE AREA */
+        /* CAKE AREA - Kuenya Digedein */
         .cake-area { 
-            margin-top: 20px; 
+            margin-top: 30px; 
             position: relative; 
             cursor: pointer; 
-            padding-top: 40px; 
+            padding-bottom: 20px; /* Jarak bawah agar teks instruksi tidak kepotong */
+            transition: opacity 0.8s ease-in-out;
         }
-        .cake-emoji { font-size: 4.5rem; position: relative; z-index: 1; }
+        .cake-emoji { font-size: 6rem; position: relative; z-index: 1; transition: transform 0.3s; }
+        .cake-emoji:active { transform: scale(0.9); }
         
         /* ANIMASI API (FLAME) */
         .flame {
-            width: 18px;
-            height: 26px;
+            width: 22px;
+            height: 32px;
             background: #ff7b00;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             position: absolute;
-            top: 25px;
+            top: 20px; /* Posisi api di atas lilin */
             left: 50%;
             transform: translateX(-50%);
             box-shadow: 0 0 15px #ff7b00, 0 0 25px #ffcc00;
@@ -159,18 +161,27 @@
 
         .flame::after {
             content: "";
-            width: 10px;
-            height: 15px;
+            width: 12px;
+            height: 18px;
             background: #ffcc00;
             border-radius: 50%;
             position: absolute;
             bottom: 2px;
-            left: 4px;
+            left: 5px;
         }
 
         @keyframes flicker {
             0% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.9; }
             100% { transform: translateX(-50%) scale(1.1) rotate(1deg); opacity: 1; }
+        }
+
+        .instruction {
+            font-size: 0.8rem; 
+            color: #888; 
+            font-weight: bold; 
+            margin-top: 15px; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .btn-open {
@@ -206,10 +217,10 @@
             <p class="birthday-wish">"Glad you were born, but even gladder that I found you. May your days be as bright as your smile."</p>
         </div>
 
-        <div class="cake-area" onclick="handleCake()">
+        <div class="cake-area" id="cakeContainer" onclick="handleCake()">
             <div id="candleFlame" style="display:none;"><div class="flame"></div></div>
             <div class="cake-emoji">🎂</div>
-            <p id="instruction" style="font-size: 0.7rem; color: #888; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">TIUP LILINNYA NDUT</p>
+            <p class="instruction" id="instruction">TEKAN KUENYA NDUT</p>
         </div>
     </div>
 
@@ -262,15 +273,26 @@
         function handleCake() {
             if (candleLit) return;
             candleLit = true;
-            document.getElementById('candleFlame').style.display = 'block';
             
+            // Nyalakan Api
+            document.getElementById('candleFlame').style.display = 'block';
+            document.getElementById('instruction').innerText = "TIUP LILINNYA...";
+
+            // Simulasi Lilin Mati & Kue Menghilang
             setTimeout(() => {
-                document.getElementById('candleFlame').style.transition = 'opacity 0.5s';
+                // Matikan Api
                 document.getElementById('candleFlame').style.opacity = '0';
+                
                 setTimeout(() => {
-                    document.getElementById('candleFlame').style.display = 'none';
-                    document.getElementById('mainContent').classList.add('show-text');
-                    document.getElementById('instruction').style.display = 'none';
+                    // Hilangkan seluruh area kue agar tidak kosong di tengah
+                    const cakeArea = document.getElementById('cakeContainer');
+                    cakeArea.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        cakeArea.style.display = 'none';
+                        // Munculkan teks ucapan
+                        document.getElementById('mainContent').classList.add('show-text');
+                    }, 800);
                 }, 500);
             }, 2000);
         }
