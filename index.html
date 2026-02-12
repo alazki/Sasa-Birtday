@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBD Shalaesya - Fixed Edition</title>
+    <title>HBD Shalaesya</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Poppins:wght@300;400;700&display=swap');
         
@@ -17,7 +17,7 @@
             overflow: hidden; 
         }
 
-        /* OPENING LAYER DENGAN FOTO */
+        /* OPENING LAYER */
         .layer-opening {
             position: fixed;
             inset: 0;
@@ -26,16 +26,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 1s cubic-bezier(0.8, 0, 0.2, 1);
+            transition: opacity 1s ease-in-out, visibility 1s;
         }
         .opening-collage { 
             position: absolute; 
             inset: 0; 
             display: flex; 
             gap: 5px; 
-            opacity: 0.6; /* Supaya tombol lebih kelihatan */
+            opacity: 0.6;
         }
-        .layer-opening.hide { transform: translateY(-100%); visibility: hidden; }
+        .layer-opening.hide { opacity: 0; visibility: hidden; }
 
         /* FILM STRIP SIDES */
         .film-strip-v {
@@ -54,13 +54,13 @@
 
         @media (max-width: 900px) {
             .film-strip-v { width: 50px; }
-            .l2, .l3, .r2, .r3 { display: none; }
         }
 
         .track-v {
             display: flex;
             flex-direction: column;
             animation: scrollV 25s linear infinite;
+            will-change: transform;
         }
         .track-v img { width: 90%; margin: 5px 0; border: 1px solid #333; }
 
@@ -106,33 +106,79 @@
         /* TEXT GROUP */
         .text-group { 
             width: 100%; 
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0); 
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: background 1s ease, box-shadow 1s ease;
         } 
-        .hbd-text { font-family: 'Playfair Display', serif; color: #d4a373; font-size: 1.2rem; opacity: 0; transition: 0.6s; }
-        .name-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 10vw, 4rem); margin: 5px 0; opacity: 0; transition: 0.8s; font-weight: 900; }
-        .birthday-wish { font-size: 0.95rem; color: #444; font-style: italic; opacity: 0; transition: 1s; }
+        
+        .hbd-text, .name-title, .birthday-wish { 
+            opacity: 0; 
+            transform: translateY(20px);
+            transition: all 0.8s ease; 
+        }
 
-        .content.show-text .hbd-text, .content.show-text .name-title, .content.show-text .birthday-wish { opacity: 1; transform: translateY(0); }
+        .hbd-text { font-family: 'Playfair Display', serif; color: #d4a373; font-size: 1.2rem; }
+        .name-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 10vw, 4rem); margin: 5px 0; font-weight: 900; }
+        .birthday-wish { font-size: 0.95rem; color: #444; font-style: italic; }
 
-        /* BUTTONS & EMOJI */
+        .content.show-text .text-group {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .content.show-text .hbd-text, 
+        .content.show-text .name-title, 
+        .content.show-text .birthday-wish { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        /* CAKE AREA */
+        .cake-area { 
+            margin-top: 20px; 
+            position: relative; 
+            cursor: pointer; 
+            padding-top: 40px; 
+        }
+        .cake-emoji { font-size: 4.5rem; position: relative; z-index: 1; }
+        
+        /* ANIMASI API (FLAME) */
+        .flame {
+            width: 18px;
+            height: 26px;
+            background: #ff7b00;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px #ff7b00, 0 0 25px #ffcc00;
+            animation: flicker 0.1s ease-in infinite alternate;
+            z-index: 2;
+        }
+
+        .flame::after {
+            content: "";
+            width: 10px;
+            height: 15px;
+            background: #ffcc00;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 2px;
+            left: 4px;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.1) rotate(1deg); opacity: 1; }
+        }
+
         .btn-open {
             z-index: 210; background: #fff; color: #000; border: none;
             padding: 15px 35px; font-weight: 700; cursor: pointer; 
             border-radius: 50px; font-size: 0.9rem; text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
-        .cake-area { margin-top: 20px; position: relative; cursor: pointer; }
-        .cake-emoji { font-size: 4.5rem; }
-        .flame-love {
-            width: 20px; height: 20px; background: #ff4d4d;
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-45deg);
-            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
-            animation: heartBeat 0.6s infinite alternate;
-        }
-        @keyframes heartBeat { from { transform: translateX(-50%) scale(1); } to { transform: translateX(-50%) scale(1.2); } }
     </style>
 </head>
 <body>
@@ -153,15 +199,17 @@
                 <div class="track-h" id="th1"></div>
             </div>
         </div>
+        
         <div class="text-group">
             <p class="hbd-text">Happy Birthday,</p>
             <h1 class="name-title">Shalaesya</h1>
             <p class="birthday-wish">"Glad you were born, but even gladder that I found you. May your days be as bright as your smile."</p>
         </div>
+
         <div class="cake-area" onclick="handleCake()">
-            <div id="candleFlame" style="display:none;"><div class="flame-love"></div></div>
+            <div id="candleFlame" style="display:none;"><div class="flame"></div></div>
             <div class="cake-emoji">🎂</div>
-            <p id="instruction" style="font-size: 0.7rem; color: #888; font-weight: bold; margin-top: 10px;">TIUP LILINNYA NDUT</p>
+            <p id="instruction" style="font-size: 0.7rem; color: #888; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">TIUP LILINNYA NDUT</p>
         </div>
     </div>
 
@@ -178,7 +226,6 @@
         }
 
         function init() {
-            // Balikin Collage di depan biar gak hitam doang
             const collage = document.getElementById('collage');
             for(let i=0; i<6; i++) {
                 const col = document.createElement('div');
@@ -194,7 +241,6 @@
                 col.appendChild(track); collage.appendChild(col);
             }
 
-            // Isi track lainnya
             ['tv1', 'tv4', 'th1'].forEach(id => {
                 const el = document.getElementById(id);
                 if(!el) return;
@@ -217,10 +263,15 @@
             if (candleLit) return;
             candleLit = true;
             document.getElementById('candleFlame').style.display = 'block';
+            
             setTimeout(() => {
-                document.getElementById('candleFlame').style.display = 'none';
-                document.getElementById('mainContent').classList.add('show-text');
-                document.getElementById('instruction').style.display = 'none';
+                document.getElementById('candleFlame').style.transition = 'opacity 0.5s';
+                document.getElementById('candleFlame').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('candleFlame').style.display = 'none';
+                    document.getElementById('mainContent').classList.add('show-text');
+                    document.getElementById('instruction').style.display = 'none';
+                }, 500);
             }, 2000);
         }
     </script>
