@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD Shalaesya - Premium Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Poppins:wght@300;400;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html { 
+            width: 100%; height: 100%; 
+            background: linear-gradient(45deg, #e5e5e5, #ffffff, #d4a37333);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: #1a1a1a;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* FILM STRIP SIDES */
+        .film-strip-v {
+            position: fixed;
+            top: 0;
+            width: 110px; 
+            height: 100%;
+            background: #000;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Desktop Layout */
+        .l1 { left: 0; z-index: 7; }
+        .l2 { left: 115px; z-index: 6; width: 90px; opacity: 0.6; }
+        .l3 { left: 210px; z-index: 5; width: 70px; opacity: 0.25; }
+        .r1 { right: 0; z-index: 7; }
+        .r2 { right: 115px; z-index: 6; width: 90px; opacity: 0.6; }
+        .r3 { right: 210px; z-index: 5; width: 70px; opacity: 0.25; }
+
+        /* Responsive: Sembunyikan strip tambahan di HP */
+        @media (max-width: 900px) {
+            .l2, .l3, .r2, .r3 { display: none; }
+            .film-strip-v { width: 50px; }
+            .track-v img { margin: 4px 0 !important; }
+        }
+
+        .track-v {
+            display: flex;
+            flex-direction: column;
+            animation: scrollV 20s linear infinite;
+        }
+
+        .track-v img { 
+            width: 85%; margin: 8px 0; 
+            object-fit: cover; 
+            border: 1px solid #333;
+            filter: grayscale(20%);
+        }
+
+        @keyframes scrollV {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        /* OPENING LAYER */
+        .layer-opening {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 1s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+        .opening-collage { position: absolute; inset: 0; display: flex; opacity: 1; gap: 10px; }
+        .layer-opening::after { 
+            content: ""; position: absolute; inset: 0; 
+            background: radial-gradient(circle, transparent, rgba(0,0,0,0.6));
+            z-index: 100; 
+        }
+        .layer-opening.hide { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+        /* CONTENT */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            height: 100vh;
+            width: 100%;
+            max-width: 600px; /* Batasi lebar konten agar proporsional */
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* VIDEOTRON */
+        .videotron-box {
+            width: 100%;
+            background: #0a0a0a;
+            padding: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            border-radius: 12px;
+            border: 6px double #d4a373; 
+            background-image: linear-gradient(135deg, #0a0a0a 25%, #1a1a1a 100%);
+        }
+
+        .screen-h {
+            width: 100%;
+            overflow: hidden;
+            background: #000;
+            padding: 10px 0;
+            position: relative;
+            border: 1px solid #222;
+            border-radius: 4px;
+        }
+
+        .track-h { 
+            display: flex; 
+            width: max-content; 
+            animation: scrollH 40s linear infinite; 
+        }
+        .track-h img { 
+            width: 200px; 
+            height: 130px; 
+            object-fit: cover; 
+            margin: 0 10px; 
+            border: 1px solid #d4a37355; 
+            border-radius: 4px; 
+        }
+
+        @keyframes scrollH {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* TEXT GROUP */
+        .text-group { width: 100%; margin-top: 20px; } 
+
+        .hbd-text { 
+            font-family: 'Playfair Display', serif; 
+            color: #d4a373; 
+            font-size: 1.2rem; 
+            opacity: 0; 
+            letter-spacing: 2px;
+            transform: translateY(20px);
+            transition: 0.6s;
+        }
+        .name-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
+            line-height: 1.1; 
+            margin: 10px 0; 
+            opacity: 0; 
+            background: linear-gradient(to bottom, #1a1a1a, #4a4a4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateY(20px);
+            transition: 0.8s;
+            font-weight: 900; 
+        }
+        .birthday-wish { 
+            font-size: 0.95rem; 
+            color: #666; 
+            line-height: 1.5; 
+            font-style: italic; 
+            opacity: 0; 
+            transform: translateY(20px);
+            transition: 1s; 
+            padding: 0 10px;
+        }
+
+        .content.show-text .hbd-text,
+        .content.show-text .name-title,
+        .content.show-text .birthday-wish { opacity: 1; transform: translateY(0); }
+
+        /* CAKE AREA */
+        .cake-area { position: relative; cursor: pointer; margin-top: 15px; }
+        .cake-emoji { font-size: 5rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); }
+        
+        .flame-love {
+            width: 20px; height: 20px;
+            background: linear-gradient(45deg, #ff0000, #ff8000);
+            position: absolute; top: -10px; left: 50%;
+            transform: translateX(-50%) rotate(-45deg);
+            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+            animation: heartBeat 0.6s infinite alternate;
+        }
+
+        @keyframes heartBeat {
+            from { transform: translateX(-50%) scale(1); }
+            to { transform: translateX(-50%) scale(1.2); }
+        }
+
+        .btn-open {
+            z-index: 101; background: #fff; color: #000; border: none;
+            padding: 15px 35px; font-weight: 700; letter-spacing: 2px; cursor: pointer; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.4s;
+            text-transform: uppercase; border-radius: 50px;
+            font-size: 0.8rem;
+        }
+        .btn-open:hover { transform: scale(1.1); background: #d4a373; color: #fff; }
+
+        #instruction { 
+            font-size: 0.7rem; color: #aaa; margin-top: 8px; 
+            text-transform: uppercase; letter-spacing: 2px; font-weight: bold; 
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <audio id="backsound" src="musik_hbd.mp3" loop></audio>
+
+    <div class="layer-opening" id="l1">
+        <div class="opening-collage" id="collage"></div>
+        <button class="btn-open" onclick="next()">Coba Tekan Ndut</button>
+    </div>
+
+    <div class="film-strip-v l1"><div class="track-v" id="tv1"></div></div>
+    <div class="film-strip-v l2"><div class="track-v" id="tv2"></div></div>
+    <div class="film-strip-v l3"><div class="track-v" id="tv3"></div></div>
+    <div class="film-strip-v r1"><div class="track-v" id="tv4"></div></div>
+    <div class="film-strip-v r2"><div class="track-v" id="tv5"></div></div>
+    <div class="film-strip-v r3"><div class="track-v" id="tv6"></div></div>
+
+    <div class="content" id="mainContent">
+        <div class="videotron-box">
+            <div class="screen-h">
+                <div class="track-h" id="th1"></div>
+            </div>
+        </div>
+
+        <div class="text-group">
+            <p class="hbd-text">Happy Birthday,</p>
+            <h1 class="name-title">Shalaesya</h1>
+            <p class="birthday-wish">
+                "Glad you were born, but even gladder that I found you. May your days be as bright as your smile."
+            </p>
+        </div>
+
+        <div class="cake-area" onclick="handleCake()">
+            <div id="candleFlame" style="display:none;">
+                <div class="flame-love"></div>
+            </div>
+            <div class="cake-emoji">🎂</div>
+            <p id="instruction">Tiup lilinnya Ndut</p>
+        </div>
+    </div>
+
+    <script>
+        const photos = Array.from({length: 18}, (_, i) => `foto${i + 1}.jpg`);
+
+        // Algoritma Acak (Fisher-Yates)
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function init() {
+            // Animasi Collage di depan
+            const collage = document.getElementById('collage');
+            for(let i=0; i<10; i++) {
+                const col = document.createElement('div');
+                col.style.flex = "1"; col.style.display = "flex"; col.style.flexDirection = "column";
+                const track = document.createElement('div');
+                track.className = "track-v";
+                track.style.animationDuration = (15 + i) + "s";
+                if(i % 2 == 0) track.style.animationDirection = "reverse";
+                
+                // Ambil 2 set foto lalu acak
+                shuffle([...photos, ...photos]).forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src; img.style.width = "100%"; img.style.marginBottom = "5px";
+                    track.appendChild(img);
+                });
+                col.appendChild(track); collage.appendChild(col);
+            }
+
+            // Isi semua track film strip dengan foto yang diacak berbeda-beda tiap track
+            ['tv1', 'tv2', 'tv3', 'tv4', 'tv5', 'tv6', 'th1'].forEach(id => {
+                const el = document.getElementById(id);
+                // Kita lipat 3 kali agar scroll smooth tanpa putus
+                const combinedPhotos = shuffle([...photos]).concat(shuffle([...photos])).concat(shuffle([...photos]));
+                combinedPhotos.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src; el.appendChild(img);
+                });
+            });
+        }
+
+        init();
+
+        function next() {
+            document.getElementById('l1').classList.add('hide');
+            document.getElementById('backsound').play().catch(e => console.log("Audio blocked"));
+        }
+
+        let candleLit = false;
+        function handleCake() {
+            const flame = document.getElementById('candleFlame');
+            const instr = document.getElementById('instruction');
+            const content = document.getElementById('mainContent');
+
+            if (!candleLit) {
+                candleLit = true;
+                flame.style.display = 'block';
+                instr.innerText = 'Make a wish...';
+                
+                setTimeout(() => {
+                    flame.style.transition = '0.5s';
+                    flame.style.opacity = '0';
+                    flame.style.transform = 'scale(0)';
+                    
+                    setTimeout(() => {
+                        flame.style.display = 'none';
+                        instr.style.display = 'none';
+                        content.classList.add('show-text');
+                        celeb();
+                    }, 500);
+                }, 2000);
+            }
+        }
+
+        function celeb() {
+            const syms = ['✨','💖','⭐','🌸','💌','🥂','💎'];
+            for(let i=0; i<80; i++) {
+                const c = document.createElement('div');
+                c.innerHTML = syms[Math.floor(Math.random()*syms.length)];
+                c.style.position = 'fixed';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-50px';
+                c.style.zIndex = '1000';
+                c.style.fontSize = Math.random() * 20 + 15 + 'px';
+                c.style.transition = `all ${Math.random()*3+3}s ease-out`;
+                document.body.appendChild(c);
+                setTimeout(() => {
+                    c.style.top = '110vh';
+                    c.style.opacity = '0';
+                    c.style.transform = `rotate(${Math.random()*720}deg)`;
+                }, 50);
+                setTimeout(() => c.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
